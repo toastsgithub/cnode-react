@@ -1,0 +1,5 @@
+:local(.nav-btn) {
+  border: none;
+	border-radius: 0;
+  height: 100%;
+}
