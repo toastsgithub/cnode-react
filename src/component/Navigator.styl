@@ -1,0 +1,34 @@
+flexAndCenter()
+  display: flex
+  justify-content: center
+  align-items: center
+
+:local(.nav-btn)
+  border: none
+	border-radius: 0
+  height: 100%
+
+:local(.nav-header)
+  padding: 0 15px
+  position: fixed
+  width: 100%
+  z-index: 100000
+  flexAndCenter()
+
+:local(.nav-avatar)
+  border: solid 2px gray
+  cursor: pointer
+
+:local(.nav-avatar):hover
+  border: solid 2px #348EED
+
+:local(.nav-wrapper)
+  width: 100%
+  max-width: 1214px
+  flexAndCenter()
+  justify-content: space-between
+
+:local(.nav-right-box)
+  float: right
+  flexAndCenter()
+  height: 100%
