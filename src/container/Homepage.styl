@@ -1,0 +1,64 @@
+flexAndCenter()
+  display: flex
+  justify-content: center
+  align-items: center
+
+roundCornerCard()
+  margin-bottom: 14px
+  border-radius: 4px
+  border: none
+  box-shadow: 0 1px 4px rgba(0,0,0,.1)
+
+:local(.layout)
+  background: #ECEFF1
+:local(.nav-btn)
+  border: none
+	border-radius: 0
+  height: 100%
+
+:local(.nav-header)
+  padding: 0 15px
+  position: fixed
+  width: 100%
+  z-index: 100000
+  flexAndCenter()
+
+:local(.nav-avatar)
+  border: solid 2px gray
+  cursor: pointer
+
+:local(.nav-avatar):hover
+  border: solid 2px #348EED
+
+:local(.nav-wrapper)
+  width: 100%
+  max-width: 1214px
+  flexAndCenter()
+  justify-content: space-between
+
+:local(.nav-right-box)
+  float: right
+  flexAndCenter()
+  height: 100%
+
+:local(.content)
+  padding: 0 20px
+  padding-top: 84px
+  display:flex
+  justify-content: center
+
+:local(.posts-column)
+  flex:1
+
+:local(.info-column)
+  width: 280px
+  // border: dotted 1px red
+  margin-left: 15px
+  
+:local(.info-card)
+  roundCornerCard()
+
+
+@media (max-width: 900px)
+  :local(.info-column)
+    display: none
