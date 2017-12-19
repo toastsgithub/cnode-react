@@ -37,6 +37,7 @@ export default class Homepage extends Component{
       res.body.data.forEach((cur)=>{
         posts.push({
           href: `https://cnodejs.org/topic/${cur.id}`,
+          id: cur.id,
           title: cur.title,
           avatar: cur.author.avatar_url,
           author: cur.author.loginname,
@@ -49,6 +50,7 @@ export default class Homepage extends Component{
   render() {
     const posts = this.state.postList.map((cur)=>{
       return <Post title={ cur.title }
+                   id={ cur.id }
                    avatar={ cur.avatar }
                    author={ cur.author }
                    content={ cur.content }
@@ -59,7 +61,6 @@ export default class Homepage extends Component{
         <Content className={ style['content'] }>
           <div style={{ width: '100%', maxWidth: '1214px', display: 'flex' }}>
             <div className={ style['posts-column'] }>
-              {/* <Skelecton /> */}
               { posts }
             </div>
             <div className={ style['info-column'] }>

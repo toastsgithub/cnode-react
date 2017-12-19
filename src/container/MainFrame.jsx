@@ -12,7 +12,7 @@ export default class MainFrame extends Component {
         <Switch>
           <Route exact path='/' component={ Homepage }></Route>
           <Route path='/topics/:type' component={ Homepage }></Route>
-          <Route path='/post' component={ PostContentPage }></Route>
+          <Route path='/post/:postId' component={ PostContentPage }></Route>
         </Switch>
       </div>
     )
