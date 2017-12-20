@@ -20,6 +20,7 @@ export default class Homepage extends Component{
   }
   componentWillReceiveProps(nextProps){
     const tabName = nextProps.match.params.type
+    EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName)
   }
   componentWillMount(){

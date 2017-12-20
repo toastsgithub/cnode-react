@@ -18,11 +18,12 @@ module.exports = {
           presets: ['es2015', 'react'],
           cacheDirectory: true,
           plugins: [
-            ['import', { libraryName: 'antd', style: 'css' }],
+            ['import', { libraryName: 'antd', style: true }],
           ]
         }
       },
       { test: /\.css$/, loader: 'style-loader!css-loader' },
+      { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
       { test: /\.styl$/, loader: "style-loader!css-loader!stylus-loader" },
       { test: /\.(png|jpg|gif)$/, loader: 'url?limit=819200' },
       { test: /\.svg$/, loader: 'svg-loader?pngScale=2' }

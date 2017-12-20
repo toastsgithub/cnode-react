@@ -6,28 +6,36 @@ import EventProxy from '../common/EventProxy.js'
 const { Header, Content, Footer } = Layout
 
 class Navigator extends Component {
-  componentWillMount(){
-    console.log(this.props)
+  constructor(props){
+    super(props)
+    this.state = {
+      currentTab: ""
+    }
   }
-  switchTab(tabName){
-    EventProxy.trigger('switch-tab', tabName)
+  componentWillMount(){
+    EventProxy.on('navigator:switchTab', (tabName)=>{
+      this.setState({ currentTab: tabName })
+    })
   }
   jump(path){
     this.props.history.push(path)
   }
+  isSelectedTab(targetTabName){
+    const ret = targetTabName === this.state.currentTab ? 'nav-btn-selected' : ''
+    return ret
+  }
   render(){
-
     return (
     <Header className={ style['nav-header'] }>
       <div className={ style['nav-wrapper'] }>
         <img src="/cnodejs_light.svg" height='30px'style={{ marginBottom: '10px' }}/>
         <div className={ style['nav-right-box'] }>
-          <Button ghost className={ style['nav-btn'] } onClick={ this.jump.bind(this, '/topics/all') }>首页</Button>
-          <Button ghost className={ style['nav-btn'] } onClick={ this.jump.bind(this, '/topics/good') }>精华</Button>
-          <Button ghost className={ style['nav-btn'] } onClick={ this.jump.bind(this, '/topics/share') }>分享</Button>
-          <Button ghost className={ style['nav-btn'] } onClick={ this.jump.bind(this, '/topics/ask') }>问答</Button>
-          <Button ghost className={ style['nav-btn'] } onClick={ this.jump.bind(this, '/topics/job') }>招聘</Button>
-          <Button ghost className={ style['nav-btn'] } onClick={ this.jump.bind(this, '/topics/dev') }>测试</Button>
+          <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('all')}` } onClick={ this.jump.bind(this, '/topics/all') }>首页</Button>
+          <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('good')}` } onClick={ this.jump.bind(this, '/topics/good') }>精华</Button>
+          <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('share')}` } onClick={ this.jump.bind(this, '/topics/share') }>分享</Button>
+          <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('ask')}` } onClick={ this.jump.bind(this, '/topics/ask') }>问答</Button>
+          <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('job')}` } onClick={ this.jump.bind(this, '/topics/job') }>招聘</Button>
+          <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('dev')}` } onClick={ this.jump.bind(this, '/topics/dev') }>测试</Button>
           <Popover overlayStyle={{ zIndex: 100001 }}
                    placement="bottomRight" 
                    title={<InfoTitle username={'Toast'} />} content={ <InfoActions /> } 
@@ -40,6 +48,8 @@ class Navigator extends Component {
     )
   }
 }
+
+
 
 class InfoTitle extends Component {
   render() {

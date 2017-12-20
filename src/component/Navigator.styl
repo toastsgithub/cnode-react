@@ -24,6 +24,7 @@ flexAndCenter()
 
 :local(.nav-wrapper)
   width: 100%
+  height: 100%
   max-width: 1214px
   flexAndCenter()
   justify-content: space-between
@@ -32,3 +33,10 @@ flexAndCenter()
   float: right
   flexAndCenter()
   height: 100%
+
+:local(.nav-right-box>Button)
+  height: 100%
+
+:global(.nav-btn-selected)
+  border-bottom: solid 4px #7fbd04
+  border-radius: 0
