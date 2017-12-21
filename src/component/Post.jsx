@@ -2,6 +2,9 @@ import React ,{ Component } from 'react'
 import { Card, Avatar, Tag, Icon, Tooltip } from 'antd'
 import { withRouter } from 'react-router-dom'
 import style from './Post.styl'
+import moment from 'moment'
+moment.locale('zh-cn')
+
 class Post extends Component {
   constructor(props){
     super(props)
@@ -39,19 +42,19 @@ class Post extends Component {
           <div>
             <Tooltip placement="bottom" title="查看/回复">
               <Icon type="eye" />
-              1000/16
+              { this.props.visitCount }/{ this.props.replyCount }
             </Tooltip>
           </div>
           <div>
             <Tooltip placement="bottom" title="创建时间">
               <Icon type="rocket" />
-              2017-12-20
+              { moment(this.props.createAt).format('YYYY-MM-DD') }
             </Tooltip>
           </div>
           <div>
             <Tooltip placement="bottom" title="最后回复时间">
               <Icon type="form" />
-              { ~~(Math.random()*100) } min
+              { moment(this.props.lastReplyAt).fromNow() }
             </Tooltip>
           </div>
         </div>

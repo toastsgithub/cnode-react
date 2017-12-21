@@ -10,6 +10,7 @@
     "express": "^4.16.2",
     "http-proxy-middleware": "^0.17.4",
     "marked": "^0.3.7",
+    "moment": "^2.20.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-hot-loader": "^3.1.3",

@@ -52,6 +52,10 @@ export default class Homepage extends Component{
           title: cur.title,
           avatar: cur.author.avatar_url,
           author: cur.author.loginname,
+          replyCount: cur.reply_count,
+          visitCount: cur.visit_count,
+          createAt: cur.create_at,
+          lastReplyAt: cur.last_reply_at,
           content: html2text(cur.content).substring(0, 200),
           tab: cur.tab
         })
@@ -73,6 +77,10 @@ export default class Homepage extends Component{
                    id={ cur.id }
                    avatar={ cur.avatar }
                    author={ cur.author }
+                   replyCount={ cur.replyCount }
+                   visitCount={ cur.visitCount }
+                   createAt={ cur.createAt }
+                   lastReplyAt={ cur.lastReplyAt }
                    content={ cur.content }
                    href={ cur.href }
                    postType={ this.mapTopicName(cur.tab) }/>
