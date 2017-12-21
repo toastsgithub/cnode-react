@@ -6,9 +6,17 @@ export default class Skelecton extends Component{
 
   render(){
     return (
-      <Card loading={true} className={ commonStyle['round-cornor-card'] }>
-        {/* aa */}
-      </Card>
+      <div>
+        <Card loading={true} className={ commonStyle['round-cornor-card'] }>
+          aa
+        </Card>
+        <Card loading={true} className={ commonStyle['round-cornor-card'] }>
+          aa
+        </Card>
+        <Card loading={true} className={ commonStyle['round-cornor-card'] }>
+          aa
+        </Card>
+      </div>
     )
   }
 }

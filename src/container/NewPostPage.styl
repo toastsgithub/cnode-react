@@ -10,18 +10,31 @@ roundCornerCard()
   box-shadow: 0 1px 4px rgba(0,0,0,.1)
 
 :local(.layout)
+  width: 100%
   position: absolute
   top: 64px
   bottom: 0
-  width: 100%
+  padding: 10px
   overflow-y: auto
   flexAndCenter()
   align-items: baseline
 
 :local(.content-wrapper)
   width: 100%
+  height: 100%
+  display: flex
   max-width: 1214px
 
-:local(.post-sheet)
+:local(.new-post-card)
   roundCornerCard()
   margin-top: 20px
+  width: 100%
+  padding-bottom: 25px
+
+:global(.mde-preview-content)
+  margin-top: 0!important
+  height: 100%
+:global(.mde-preview)
+  margin-left: 10px
+  height: 100%
+  
