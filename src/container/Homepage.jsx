@@ -88,22 +88,22 @@ export default class Homepage extends Component{
             </div>
             <div className={ style['info-column'] }>
               <Card className={ style['info-card'] }>
-              {/* 当前板块 */}
-              <Tooltip placement="left" title="当前板块">
+                <Tooltip placement="left" title="公告">
                 <div>
-                  <Icon type="appstore-o" />
-                  <span style={{ padding: '0 10px' }}>{ this.state.currentTopic }</span>
+                  <Icon type="notification" />
+                  <span style={{ padding: '0 10px' }}>公告</span>
                 </div>
-              </Tooltip>
-              <hr/>
-              <Tooltip placement="left" title="公告">
-              <div>
-                <Icon type="notification" />
-                <span style={{ padding: '0 10px' }}>公告</span>
-              </div>
-              </Tooltip>
-              <div>CNode 社区为国内最大最具影响力的 Node.js 开源技术社区，致力于 Node.js 的技术研究。CNode 社区由一批热爱 Node.js 技术的工程师发起，目前已经吸引了互联网各个公司的专业技术人员加入，我们非常欢迎更多对 Node.js 感兴趣的朋友。</div>
-
+                </Tooltip>
+                <div>CNode 社区为国内最大最具影响力的 Node.js 开源技术社区，致力于 Node.js 的技术研究。CNode 社区由一批热爱 Node.js 技术的工程师发起，目前已经吸引了互联网各个公司的专业技术人员加入，我们非常欢迎更多对 Node.js 感兴趣的朋友。</div>
+              </Card>
+              <Card className={ style['info-card'] }>
+                {/* 当前板块 */}
+                <Tooltip placement="left" title="当前板块">
+                  <div>
+                    <Icon type="appstore-o" />
+                    <span style={{ padding: '0 10px' }}>{ this.state.currentTopic }</span>
+                  </div>
+                </Tooltip>
               </Card>
               <Card className={ style['info-card'] }>
                 <Icon type="appstore-o" />

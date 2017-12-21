@@ -3,6 +3,10 @@ import { Card } from 'antd'
 import style from './PostContentPage.styl'
 import Request from 'superagent'
 import marked from 'marked'
+marked.setOptions({
+  gfm: true,
+  breaks: true
+})
 
 export default class PostContentPage extends Component {
   constructor(props){
