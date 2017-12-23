@@ -4,6 +4,7 @@ import style from './Homepage.styl'
 import Request from 'superagent'
 import Skelecton from '../container/Skelecton.jsx'
 import Post from '../component/Post.jsx'
+import PostContentPage from '../container/PostContentPage.jsx'
 import { html2text } from '../util.js'
 import EventProxy from '../common/EventProxy.js'
 
@@ -26,11 +27,35 @@ export default class Homepage extends Component{
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName)
   }
+  componentWillUpdate(){
+    const scrollBody = document.getElementById('scroll-body')
+    let scrollPosition = sessionStorage.getItem('@@scroll')
+    if (scrollPosition){
+      
+      setImmediate(function() {
+        scrollBody.scrollTop = Number.parseInt(scrollPosition)
+        console.log('reset'+scrollPosition)
+      })
+    }
+  }
   componentDidMount(){
     const tabName = this.props.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName)
-    // console.log(this.props)
+
+    // 记录滚动位置的历史数据，方便回跳的时候恢复现场
+    const scrollBody = document.getElementById('scroll-body')
+    // 函数节流 ??
+    // TODOS 这里如果 react 复用 dom 的话，会造成重复添加监听事件
+    let counter = 0
+    scrollBody.addEventListener('scroll', ()=>{
+      counter ++
+      if (counter > 10){
+        sessionStorage.setItem(`@@scroll`,`${scrollBody.scrollTop}`)
+        counter = 0
+      }
+    })
+    
   }
   mapTopicName(tabName){
     return topicNameTable[checkTable.indexOf(tabName)]
@@ -90,7 +115,7 @@ export default class Homepage extends Component{
     })
 
     return (
-      <div className={ style['layout'] }>
+      <div className={ style['layout'] } id='scroll-body'>
         <Content className={ style['content'] }>
           <div style={{ width: '100%', maxWidth: '1214px', display: 'flex' }}>
             <div className={ style['posts-column'] }>
