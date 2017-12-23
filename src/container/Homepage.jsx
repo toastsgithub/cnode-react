@@ -27,7 +27,10 @@ export default class Homepage extends Component{
     this.requestTopics(tabName)
   }
   componentWillMount(){
-    this.requestTopics(this.props.match.params.type)
+    const tabName = this.props.match.params.type
+    EventProxy.trigger('navigator:switchTab', tabName)
+    this.requestTopics(tabName)
+    // console.log(this.props)
   }
   mapTopicName(tabName){
     return topicNameTable[checkTable.indexOf(tabName)]
