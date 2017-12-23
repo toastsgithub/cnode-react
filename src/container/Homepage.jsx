@@ -26,7 +26,7 @@ export default class Homepage extends Component{
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName)
   }
-  componentWillMount(){
+  componentDidMount(){
     const tabName = this.props.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName)

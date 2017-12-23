@@ -12,7 +12,7 @@ class Navigator extends Component {
       currentTab: ""
     }
   }
-  componentWillMount(){
+  componentDidMount(){
     EventProxy.on('navigator:switchTab', (tabName)=>{
       this.setState({ currentTab: tabName })
     })

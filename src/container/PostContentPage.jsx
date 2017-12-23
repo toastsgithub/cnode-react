@@ -19,7 +19,7 @@ export default class PostContentPage extends Component {
       loadingComment: false
     }
   }
-  componentWillMount(){
+  componentDidMount(){
     this.setState({ loadingContent: true })
     const postId = this.props.match.params.postId
     Request.get(`/api/topic/${postId}`)
