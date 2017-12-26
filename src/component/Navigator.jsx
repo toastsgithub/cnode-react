@@ -28,7 +28,7 @@ class Navigator extends Component {
     return (
     <Header className={ style['nav-header'] }>
       <div className={ style['nav-wrapper'] }>
-        <img src="/cnodejs_light.svg" height='30px'style={{ marginBottom: '10px' }}/>
+        <img src="/cnodejs_light.svg" height='30px'style={{ marginBottom: '10px', cursor: 'pointer' }} onClick={ this.jump.bind(this, '/') }/>
         <div className={ style['nav-right-box'] }>
           <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('all')}` } onClick={ this.jump.bind(this, '/topics/all') }>首页</Button>
           <Button ghost className={ `${style['nav-btn']} ${this.isSelectedTab('good')}` } onClick={ this.jump.bind(this, '/topics/good') }>精华</Button>

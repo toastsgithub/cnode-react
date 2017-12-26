@@ -27,10 +27,17 @@ roundCornerCard()
 
 :local(.new-post-card)
   roundCornerCard()
-  margin-top: 20px
+  margin: 0px
   width: 100%
+  height: 100%
   padding-bottom: 25px
 
+:local(.editor-wrapper)
+  height: 100%
+  position: relative
+
+:global(.ant-card-body>div)
+  height: 100%
 :global(.mde-preview-content)
   margin-top: 0!important
   height: 100%

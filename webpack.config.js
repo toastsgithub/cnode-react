@@ -1,5 +1,10 @@
 const path = require('path')
 const webpack = require('webpack')
+const theme = require('./antd-theme.js')
+const lessToJs = require('less-vars-to-js');
+const fs = require('fs')
+const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, './theme.less'), 'utf8'));
+console.log(themeVariables)
 module.exports = {
   entry: [
     // 'webpack-dev-server/client',
@@ -23,7 +28,15 @@ module.exports = {
         }
       },
       { test: /\.css$/, loader: 'style-loader!css-loader' },
-      { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
+      { test: /\.less$/, use:[
+        {loader: "style-loader"},
+        {loader: "css-loader"},
+        {loader: "less-loader", 
+          options: {
+            modifyVars: themeVariables
+          }
+        }
+      ]},
       { test: /\.styl$/, loader: "style-loader!css-loader!stylus-loader" },
       { test: /\.(png|jpg|gif)$/, loader: 'url?limit=819200' },
       { test: /\.svg$/, loader: 'svg-loader?pngScale=2' }

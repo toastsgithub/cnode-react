@@ -1,13 +1,47 @@
+fontFamily()
+  font-family: "menlo", "PingFang SC"
 :local(.editor-textarea)
   border-radius: 0!important
+  fontFamily()
+  resize: none
+  height: 100%
 
 :local(.editor-textarea:focus)
   outline: solid 2px #7fbd04
 
 :local(.editor-wrapper)
   display: flex
+  position: absolute
+  left: 0px
+  right: 0px
+  bottom: 0px
+  top: 0px
 
 :local(.editor-text)
   flex: 1
-:local(.editor-preview)
+  display: flex
+  flex-direction: column
+:global(.mde-text)
   flex: 1
+:global(.mde-preview-content)
+  border-radius: 0!important
+  border: none!important
+
+:global(.mde-preview)
+  margin-left: 0
+
+:local(.editor-preview)
+  overflow: auto
+  margin-left: 10px
+  border: solid 1px #ccc
+  flex: 1
+
+:local(.directive-bar)
+  border: solid 1px #ccc
+  width: 100%
+  transform: translateY(1px)
+
+:local(.directive-bar>button)
+  padding-left: 10px
+  padding-right: 10px
+  border: none

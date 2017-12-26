@@ -25,16 +25,16 @@ export default class Homepage extends Component{
   componentWillReceiveProps(nextProps){
     const tabName = nextProps.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
+    sessionStorage.removeItem('@@scroll')
     this.requestTopics(tabName)
   }
   componentWillUpdate(){
     const scrollBody = document.getElementById('scroll-body')
     let scrollPosition = sessionStorage.getItem('@@scroll')
     if (scrollPosition){
-      
+      // 异步保证内容加载完后才调整 scroll 历史
       setImmediate(function() {
         scrollBody.scrollTop = Number.parseInt(scrollPosition)
-        console.log('reset'+scrollPosition)
       })
     }
   }
@@ -42,7 +42,6 @@ export default class Homepage extends Component{
     const tabName = this.props.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName)
-
     // 记录滚动位置的历史数据，方便回跳的时候恢复现场
     const scrollBody = document.getElementById('scroll-body')
     // 函数节流 ??

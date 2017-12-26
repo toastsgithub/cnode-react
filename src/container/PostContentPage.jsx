@@ -20,7 +20,6 @@ export default class PostContentPage extends Component {
     }
   }
   componentDidMount(){
-    console.log('on post, set state')
     sessionStorage.setItem('onPost', 'true')
    
     this.setState({ loadingContent: true })
@@ -43,7 +42,6 @@ export default class PostContentPage extends Component {
     const commentsElems = this.state.comments.map((cur)=>{
       return <Comment comment={ cur } />
     })
-    console.log(this.state.comments)
     return (
       <div className={ style['layout'] }>
         <div className={ style['content-wrapper'] }>
