@@ -83,6 +83,7 @@ export default class Homepage extends Component{
           visitCount: cur.visit_count,
           createAt: cur.create_at,
           lastReplyAt: cur.last_reply_at,
+          isTop : cur.top,
           content: html2text(cur.content).substring(0, 200),
           tab: cur.tab
         })
@@ -110,6 +111,7 @@ export default class Homepage extends Component{
                    lastReplyAt={ cur.lastReplyAt }
                    content={ cur.content }
                    href={ cur.href }
+                   isTop={ cur.isTop }
                    postType={ this.mapTopicName(cur.tab) }/>
     })
 

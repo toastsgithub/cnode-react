@@ -13,6 +13,7 @@ class Post extends Component {
     this.props.history.push(`/post/${postId}`)
   }
   render(){
+    const topTag = this.props.isTop ? <Tag color="green">置顶</Tag> : null
     return (
       <Card className={ style['post-card'] }>
         <div className={ style['post-info-wrapper'] }>
@@ -25,6 +26,7 @@ class Post extends Component {
             </div>
           </div>
           <div className={ style['post-info-right-part'] }>
+            { topTag }
             <Tag color="blue">{ this.props.postType }</Tag>
           </div>
         </div>
