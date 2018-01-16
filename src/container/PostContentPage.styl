@@ -12,7 +12,7 @@ roundCornerCard()
 :local(.layout)
   position: absolute
   padding: 10px
-  top: 64px
+  top: 50px
   bottom: 0
   width: 100%
   overflow-y: auto
@@ -23,9 +23,23 @@ roundCornerCard()
   width: 100%
   max-width: 1214px
 
-:local(.post-sheet)
-  roundCornerCard()
-  margin-top: 20px
+:local(.content-body)
+  position: relative
+  border: none
+  border-radius: 0
+:local(.content-body) > .ant-card-body
+  padding: 15px
+
+:local(.content-header)
+  min-height: 87px
+  border-bottom: solid 1px #eee
+  background: #fafafa
+  width: 100%
+  padding: 15px
+  display: flex
+
+:local(.header-title)
+  flex: 1
 
 :local(.comment)
   position: relative
