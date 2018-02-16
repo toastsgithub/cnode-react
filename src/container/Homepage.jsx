@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Tooltip, List } from 'antd'
+import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Tooltip, List, Pagination } from 'antd'
 import style from './Homepage.styl'
 import Request from 'superagent'
 import Skelecton from '../container/Skelecton.jsx'
@@ -19,57 +19,59 @@ export default class Homepage extends Component{
       postList: [],
       isLoading: false,
       currentTopic: '首页',
+      currentPage: 1,
       userInfo: { userName: 'Toast', githubName: 'toastsgithub', createDate: '2017-12-20 20:04:13', score: '3213'}
     }
+    this.onPageChange = this.onPageChange.bind(this)
   }
   componentWillReceiveProps(nextProps){
     const tabName = nextProps.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
-    sessionStorage.removeItem('@@scroll')
+    // sessionStorage.removeItem('@@scroll')
     this.requestTopics(tabName)
   }
   componentWillUpdate(){
-    const scrollBody = document.getElementById('scroll-body')
-    let scrollPosition = sessionStorage.getItem('@@scroll')
-    if (scrollPosition){
-      // 异步保证内容加载完后才调整 scroll 历史
-      setImmediate(function() {
-        scrollBody.scrollTop = Number.parseInt(scrollPosition)
-      })
-    }
+    // const scrollBody = document.getElementById('scroll-body')
+    // let scrollPosition = sessionStorage.getItem('@@scroll')
+    // if (scrollPosition){
+    //   // 异步保证内容加载完后才调整 scroll 历史
+    //   setImmediate(function() {
+    //     scrollBody.scrollTop = Number.parseInt(scrollPosition)
+    //   })
+    // }
   }
   componentDidMount(){
     const tabName = this.props.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
-    this.requestTopics(tabName)
-    // 记录滚动位置的历史数据，方便回跳的时候恢复现场
-    const scrollBody = document.getElementById('scroll-body')
-    // 函数节流 ??
-    // TODOS 这里如果 react 复用 dom 的话，会造成重复添加监听事件
-    let counter = 0
-    scrollBody.addEventListener('scroll', ()=>{
-      counter ++
-      if (counter > 10){
-        sessionStorage.setItem(`@@scroll`,`${scrollBody.scrollTop}`)
-        counter = 0
-      }
-    })
+    this.requestTopics(tabName, 1)
+    // // 记录滚动位置的历史数据，方便回跳的时候恢复现场
+    // const scrollBody = document.getElementById('scroll-body')
+    // // 函数节流 ??
+    // // TODOS 这里如果 react 复用 dom 的话，会造成重复添加监听事件
+    // let counter = 0
+    // scrollBody.addEventListener('scroll', ()=>{
+    //   counter ++
+    //   if (counter > 10){
+    //     sessionStorage.setItem(`@@scroll`,`${scrollBody.scrollTop}`)
+    //     counter = 0
+    //   }
+    // })
     
   }
   mapTopicName(tabName){
     return topicNameTable[checkTable.indexOf(tabName)]
   }
-  requestTopics(tabName){
+  requestTopics(tabName, page){
     this.setState({
       postList: [],
       isLoading: true,
     })
     if (checkTable.indexOf(tabName) === -1){
-      throw new Error(`tabName should be one of ${checkTable.join(', ')}`)
+      throw new Error(`tabName should be one of ${checkTable.join(', ')}, but got :${tabName}`)
     }
 
     Request.get('/api/topics')
-    .query({ tab: tabName })
+    .query({ tab: tabName, page: page, limit: 10 })
     .end((err, res)=>{
       let posts = []
       res.body.data.forEach((cur)=>{
@@ -98,6 +100,11 @@ export default class Homepage extends Component{
   jump(path){
     this.props.history.push(path)
   }
+  onPageChange(page){
+    const tabName = this.props.match.params.type
+    this.setState({ currentPage: page })
+    this.requestTopics(tabName, page)
+  }
   render() {
     const SkelectonWrapper = this.state.isLoading ? <Skelecton /> : null
     const posts = this.state.postList.map((cur)=>{
@@ -118,10 +125,11 @@ export default class Homepage extends Component{
     return (
       <div className={ style['layout'] } id='scroll-body'>
         <Content className={ style['content'] }>
-          <div style={{ width: '100%', maxWidth: '1214px', display: 'flex' }}>
+          <div style={{ width: '100%', maxWidth: '1214px', display: 'flex', paddingBottom: '20px' }}>
             <div className={ style['posts-column'] }>
               { SkelectonWrapper }
               { posts }
+              <Pagination current={ this.state.currentPage } total={300} onChange={ this.onPageChange } />
             </div>
             <div className={ style['info-column'] }>
               <Card className={ style['info-card'] }>

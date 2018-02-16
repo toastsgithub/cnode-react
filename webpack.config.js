@@ -11,7 +11,7 @@ module.exports = {
     path.resolve(__dirname, 'src/index.js')
   ],
   output: {
-    path: path.resolve(__dirname, 'public/dist'), //打包后的文件存放的地方
+    path: path.resolve(__dirname, 'dist'), //打包后的文件存放的地方
     filename: 'bundle.js', //打包后输出文件的文件名
     // publicPath: 'http://localhost:8888/build/'  //启动本地服务后的根目录
   },
@@ -42,6 +42,20 @@ module.exports = {
       { test: /\.svg$/, loader: 'svg-loader?pngScale=2' }
     ]
   },
+
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env':{
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress:{
+        warnings: false
+      }
+    })
+  ],
+
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/',
