@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'production'
 
 const ora = require('ora')
+const exec = require('child_process').exec
 const fs = require('fs')
 const fsutil = require('@duanzm/fsutil')
 const rm = require('rimraf')
@@ -42,27 +43,37 @@ new Promise((resolve, reject)=>{
   }
 }).then(()=>{
   // run build process
-  webpack(webpackConfig, function (err, stats) {
-    spinner.stop()
-    if (err) throw err
-    process.stdout.write(stats.toString({
-      colors: true,
-      modules: false,
-      children: false,
-      chunks: false,
-      chunkModules: false
-    }) + '\n\n')
-
-    if (stats.hasErrors()) {
-      console.log(chalk.red('  Build failed with errors.\n'))
-      process.exit(1)
-    }
-
-    console.log(chalk.cyan('  Build complete.\n'))
-    console.log(chalk.yellow(
-      '  Tip: built files are meant to be served over an HTTP server.\n' +
-      '  Opening index.html over file:// won\'t work.\n'
-    ))
+  return new Promise((resolve, reject)=>{
+    webpack(webpackConfig, function (err, stats) {
+      spinner.stop()
+      if (err) throw err
+      process.stdout.write(stats.toString({
+        colors: true,
+        modules: false,
+        children: false,
+        chunks: false,
+        chunkModules: false
+      }) + '\n\n')
+  
+      if (stats.hasErrors()) {
+        console.log(chalk.red('  Build failed with errors.\n'))
+        process.exit(1)
+      }
+      console.log(chalk.cyan('  Copying static resources.\n'))
+      exec('cp public/* dist && cp app.js dist && cp package.json dist && tar -zcvf dist/cnodejs.tar.gz dist/*', (err)=>{
+        if (err) {
+          reject(err)
+          return
+        }
+        resolve()
+      })
+    })
   })
+}).then(()=>{
+  console.log(chalk.cyan('  Build complete.\n'))
+  console.log(chalk.yellow(
+        '  Tip: built files are meant to be served over an HTTP server.\n' +
+        '  Opening index.html over file:// won\'t work.\n'
+  ))
   spinner.stop()
 })

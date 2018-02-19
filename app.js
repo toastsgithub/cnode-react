@@ -11,9 +11,7 @@ const PORT = 9000
 
 const app = new express()
 app.use(compression())
-
-app.use('/static', express.static('public/static'))
-app.use(express.static('public'))
+app.use(express.static('dist'))
 app.use('/api', proxy({
     target: 'https://cnodejs.org',
     pathRewrite: {'^/api': '/api/v1'},
