@@ -9,7 +9,7 @@ export default class MarkdownEditor extends Component{
   constructor(props){
     super(props)
     this.state = {
-      showPreview: false
+      showPreview: true
     }
   }
   handleCommand(command){
