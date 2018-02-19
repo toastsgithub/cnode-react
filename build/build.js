@@ -16,7 +16,7 @@ spinner.start()
 new Promise((resolve, reject)=>{
   // check the dist directory
   fsutil.exist(distPath, (err, exist)=>{
-    if (exists) {
+    if (exist) {
       resolve(true)
     } else {
       resolve(false)
@@ -33,8 +33,8 @@ new Promise((resolve, reject)=>{
     })
   } else {
     // dist dir exist, clear it
-    return new Primise((resolve, reject)=>{
-      rm('./dist', (err)=>{
+    return new Promise((resolve, reject)=>{
+      rm('./dist/*', (err)=>{
         if (err) throw err
         resolve()
       })
@@ -42,5 +42,27 @@ new Promise((resolve, reject)=>{
   }
 }).then(()=>{
   // run build process
-  console.log('build done')
+  webpack(webpackConfig, function (err, stats) {
+    spinner.stop()
+    if (err) throw err
+    process.stdout.write(stats.toString({
+      colors: true,
+      modules: false,
+      children: false,
+      chunks: false,
+      chunkModules: false
+    }) + '\n\n')
+
+    if (stats.hasErrors()) {
+      console.log(chalk.red('  Build failed with errors.\n'))
+      process.exit(1)
+    }
+
+    console.log(chalk.cyan('  Build complete.\n'))
+    console.log(chalk.yellow(
+      '  Tip: built files are meant to be served over an HTTP server.\n' +
+      '  Opening index.html over file:// won\'t work.\n'
+    ))
+  })
+  spinner.stop()
 })

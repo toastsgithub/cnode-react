@@ -48,7 +48,7 @@
   "scripts": {
     "dev": "webpack-dev-server --progress --config config/webpack.dev.js --hot",
     "start": "echo 'script not specified'",
-    "build": "node build/build.js",
+    "build": "/usr/local/bin/node build/build.js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },

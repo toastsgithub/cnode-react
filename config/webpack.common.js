@@ -4,7 +4,6 @@ const theme = require('../antd-theme.js')
 const lessToJs = require('less-vars-to-js');
 const fs = require('fs')
 const themeVariables = lessToJs(fs.readFileSync(path.join(__dirname, '../theme.less'), 'utf8'));
-console.log(themeVariables)
 module.exports = {
   entry: [
     path.resolve(__dirname, '../src/index.js')
