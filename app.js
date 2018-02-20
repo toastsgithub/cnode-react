@@ -18,7 +18,7 @@ app.use('/api', proxy({
     changeOrigin: true }))
 //app.use('/api', proxy({target: 'https://cnodejs.org', changeOrigin: true}))
 app.get('/*', (req, res)=>{
-    const idxPath = path.resolve(__dirname, 'public/index.html')
+    const idxPath = path.resolve(__dirname, 'dist/index.html')
     res.sendFile(idxPath)
 })
 
