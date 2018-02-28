@@ -49,10 +49,28 @@
     "dev": "webpack-dev-server --progress --config config/webpack.dev.js --hot",
     "start": "echo 'script not specified'",
     "build": "/usr/local/bin/node build/build.js",
-    "test": "react-scripts test --env=jsdom",
+    "test": "NODE_ENV=testing jest __tests__",
+    "test:coverage": "NODE_ENV=testing jest --coverage __tests__",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "babel-jest": "^22.2.2",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "jest": "^22.3.0",
     "webpack-dev-server": "^2.9.5"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|less|scss)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   }
 }

@@ -4,6 +4,7 @@ import Homepage from './Homepage.jsx'
 import NewPostPage from './NewPostPage.jsx'
 import Navigator from '../component/Navigator.jsx'
 import PostContentPage from '../container/PostContentPage.jsx'
+import LoginPage from '../container/LoginPage.jsx'
 
 export default class MainFrame extends Component {
   render (){
@@ -15,6 +16,7 @@ export default class MainFrame extends Component {
           <Route path='/topics/:type' component={ Homepage }></Route>
           <Route path='/post/new' component={ NewPostPage }></Route>
           <Route path='/post/:postId' component={ PostContentPage }></Route>
+          <Route path='/login' component={ LoginPage }></Route>
         </Switch>
       </div>
     )
