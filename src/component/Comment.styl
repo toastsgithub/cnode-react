@@ -8,9 +8,13 @@ roundCornerCard()
   display: flex
 
 :local(.comment)
-  roundCornerCard()
+  // roundCornerCard()
   flex: 1
   position: relative
+
+:local(.comment) > .ant-card-body
+  padding: 15px
+
 :local(.caret)
   position: absolute
   border: solid 10px transparent
@@ -21,4 +25,15 @@ roundCornerCard()
 
 :local(.comment-avatar)
   margin-right: 20px
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34)
+  // box-shadow: 0 1px 4px rgba(0, 0, 0, 0.34)
+
+:local(.comment-content)
+  min-width: 0
+  flex: 1
+
+:local(.comment-menu)
+  display: flex
+  justify-content: space-between
+
+// :local(.comment-menu-btn-group)
+  

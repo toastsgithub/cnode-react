@@ -1,4 +1,5 @@
 import React ,{ Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Card, Avatar, Tag, Icon, Tooltip } from 'antd'
 import { withRouter } from 'react-router-dom'
 import style from './Post.styl'
@@ -38,28 +39,30 @@ class Post extends Component {
         <div className={ style['post-content'] }>
           { this.props.content }
         </div>
-        ...
-        <strong>READ MORE</strong>
-        <div className={ style['post-footer'] }>
-          <div>
-            <Tooltip placement="bottom" title="查看/回复">
-              <Icon type="eye" />
-              { this.props.visitCount }/{ this.props.replyCount }
-            </Tooltip>
+        {/* <strong>READ MORE</strong> */}
+        <span className={ style['post-footer'] }>
+          <div className={ style['post-info'] }>
+            <div>
+              <Tooltip placement="bottom" title="查看/回复">
+                <Icon type="eye" />
+                { this.props.visitCount }/{ this.props.replyCount }
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip placement="bottom" title="创建时间">
+                <Icon type="rocket" />
+                { moment(this.props.createAt).format('YYYY-MM-DD') }
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip placement="bottom" title="最后回复时间">
+                <Icon type="form" />
+                { moment(this.props.lastReplyAt).fromNow() }
+              </Tooltip>
+            </div>
           </div>
-          <div>
-            <Tooltip placement="bottom" title="创建时间">
-              <Icon type="rocket" />
-              { moment(this.props.createAt).format('YYYY-MM-DD') }
-            </Tooltip>
-          </div>
-          <div>
-            <Tooltip placement="bottom" title="最后回复时间">
-              <Icon type="form" />
-              { moment(this.props.lastReplyAt).fromNow() }
-            </Tooltip>
-          </div>
-        </div>
+          <Link to={`/post/${this.props.id}`}>Read More</Link>
+        </span>
       </Card>)
   }
 }

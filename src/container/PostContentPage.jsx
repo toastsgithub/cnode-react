@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Card, Avatar } from 'antd'
+import React, { Component, Fragment } from 'react'
+import { Card, Avatar, Icon } from 'antd'
 import style from './PostContentPage.styl'
 import Request from 'superagent'
 import Comment from '../component/Comment.jsx'
@@ -22,8 +22,6 @@ export default class PostContentPage extends Component {
     }
   }
   componentDidMount(){
-    sessionStorage.setItem('onPost', 'true')
-   
     this.setState({ loadingContent: true })
     const postId = this.props.match.params.postId
     Request.get(`/api/topic/${postId}`)
@@ -35,7 +33,8 @@ export default class PostContentPage extends Component {
       this.setState({ 
         comments: res.body.data.replies,
         author: author,
-        title: res.body.data.title
+        title: res.body.data.title,
+        collected: res.body.data.collected
       })
     })
   }
@@ -47,49 +46,87 @@ export default class PostContentPage extends Component {
     })
   }
   render(){
-    const commentsElems = this.state.comments.map((cur)=>{
-      return <Comment comment={ cur } />
-    })
     return (
       <div className={ style['layout'] }>
         <div className={ style['content-wrapper'] }>
-          <div className={ style['post-sheet'] }>
-            <div className={ style['content-header'] }>
-              <div className={ style['header-title'] }>
-                <h2 style={{ border: 'none' }}>{ this.state.title }</h2>
-                <div>
-                  <a href='#'>
-                    {this.state.author.loginname}
-                  </a>
-                  发布于 1970-01-01 / 
-                  最后由 <a href='#'>holder</a>
-                  回复于 1970-01-01 / 
-                  xxx 次阅读
-                </div>
-              </div>
-              <div className={ style['header-avatar'] }>
-                <Avatar src={ this.state.author.avatar_url } size='large'/>
-              </div>
-            </div>
-            <Card loading={ this.state.loadingContent } className={ style['content-body'] }>
-            {/* FYI. 这里 Card 中如果没有内容的话, loading 效果不显示, 至少留个空白或者显式的留个 字符/回车 等 */}
-              
-              <div>
-                <div dangerouslySetInnerHTML={{ __html: this.state.postContent }} />
-              </div>
-            </Card>
-          </div>
-            <span style={{ fontSize: '20px' }}>评论</span>
-            <hr/>
-            <div className={ style['comment'] }>
-              <div className={ style['timeline'] } />
-              { commentsElems }
-            </div>
+          <LeftPart title={this.state.title} 
+                    author={this.state.author} 
+                    comments={this.state.comments}
+                    postContent={this.state.postContent}
+                    loadingContent={this.state.loadingContent}
+                    loadingComment={this.state.loadingComment}/>
+          <RightPart title={this.state.title}
+                     author={this.state.author}
+                     replyCount={this.state.comments.length}
+                     collected={this.state.collected} />
         </div>
-        {/* <div className={ style['comment-wrapper'] }>
-          
-        </div> */}
       </div>
     )
   }
+}
+
+function LeftPart (props) {
+  const { title, author, loadingContent, loadingComment, postContent, comments } = props
+  const commentsElems = comments.map((cur)=>{
+    return <Comment comment={ cur } />
+  })
+  return (
+    <div style={{ flex: 1, minWidth: '0' }}>
+      <div className={ style['post-sheet'] }>
+        <div className={ style['content-header'] }>
+          <div className={ style['header-title'] }>
+            <h2 style={{ border: 'none' }}>{ title }</h2>
+            <div>
+              <a href='#'>
+                { author.loginname }
+              </a>
+              发布于 1970-01-01 / 
+              最后由 <a href='#'>holder</a>
+              回复于 1970-01-01 / 
+              xxx 次阅读
+            </div>
+            </div>
+            <div className={ style['header-avatar'] }>
+              <Avatar src={ author.avatar_url } size='large'/>
+            </div>
+          </div>
+          <Card loading={ loadingContent } className={ style['content-body'] }>
+            {/* FYI. 这里 Card 中如果没有内容的话, loading 效果不显示, 至少留个空白或者显式的留个 字符/回车 等 */}
+                
+            <div>
+              <div dangerouslySetInnerHTML={{ __html: postContent }} />
+            </div>
+          </Card>
+        </div>
+        <span style={{ fontSize: '20px' }}>评论</span>
+        <hr/>
+        <CommentList comments={comments}>
+          { (comments) => comments.map((commentItem)=> <Comment comment={commentItem}/> ) }
+        </CommentList>
+      </div>)
+}
+
+function RightPart (props) {
+  const { title, author, replyCount } = props
+  return (
+  <div className={ style['post-info'] }>
+    <Card style={{position: 'sticky', top: '10px'}}>
+      <h2 style={{ border: 'none' }}>{ title }</h2>
+      <hr/>
+      <tr><td>作者：</td><td>{author.loginname}</td></tr>
+      <tr><td>回复数：</td><td>{replyCount}</td></tr>
+      <hr/>
+      <div style={{ display: 'flex' }} className={ style['post-menu'] }>
+        <Icon type="folder-add" />
+      </div>
+      {/* <Avatar icon='user' style={{ width: '100%' }} src={author.avatar_url}/> */}
+    </Card>
+  </div>)
+}
+
+function CommentList (props) {
+  return (
+    <div>
+      { props.children(props.comments) }
+    </div>)
 }

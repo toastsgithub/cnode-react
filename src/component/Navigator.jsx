@@ -13,6 +13,7 @@ class Navigator extends Component {
       currentTab: "",
       username: null
     }
+    this.logout = this.logout.bind(this)
   }
   componentDidMount(){
     EventProxy.on('navigator:switchTab', (tabName)=>{
@@ -24,6 +25,11 @@ class Navigator extends Component {
         username: "toast"
       })
     }
+  }
+
+  logout () {
+    localStorage.removeItem('cnodejs:accesstoken')
+    this.setState({ username: null })
   }
   jump(path){
     this.props.history.push(path)
@@ -44,7 +50,7 @@ class Navigator extends Component {
           <NavLink href='/topics/ask' className={ `${style['nav-btn']} ${this.isSelectedTab('ask')}` }>问答</NavLink>
           <NavLink href='/topics/job' className={ `${style['nav-btn']} ${this.isSelectedTab('job')}` }>招聘</NavLink>
           <NavLink href='/topics/dev' className={ `${style['nav-btn']} ${this.isSelectedTab('dev')}` }>测试</NavLink>
-          <UserInfoPanel username={this.state.username}/>
+          <UserInfoPanel username={this.state.username} onLogout={this.logout}/>
         </div>
       </div>
     </Header>
@@ -67,10 +73,11 @@ class InfoTitle extends Component {
 class InfoActions extends Component {
 
   render(){
+    
     return (
       <div>
         <DropdownButton>设置</DropdownButton>
-        <DropdownButton>退出登录</DropdownButton>
+        <DropdownButton onClick={ this.props.onLogout }>退出登录</DropdownButton>
       </div>
     )
   }
@@ -78,47 +85,44 @@ class InfoActions extends Component {
 
 class DropdownButton extends Component {
   render(){
+    // console.log(this.props)
     return (
-      <Button style={{ width: '100%', border: 'none', textAlign: 'left'}}>{ this.props.children }</Button>
+      <Button style={{ width: '100%', border: 'none', textAlign: 'left'}} onClick={this.props.onClick}>{ this.props.children }</Button>
     )
   }
 }
 
-class UserInfoPanel extends Component {
-  
-  render(){
-    const { username } = this.props
-    return username ? 
-          <LoggedInPanel username={username}/> :
-          <UnloggedInPanel />
-  }
+function UserInfoPanel (props) {
+  const { username, onLogout } = props
+  console.log(props)
+  return username ? 
+        <LoggedInPanel username={username} onLogout={onLogout} /> :
+        <UnloggedInPanel />
 }
 
 class LoggedInPanel extends Component {
   render (){
-    const { username } = this.props
-    return (<div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ padding: '0 15px 0 15px' }}>
-              <Badge dot>
-                <Icon type="notification" />
-              </Badge>
-            </div>
-            <Popover overlayStyle={{ zIndex: 100001 }}
-                      placement="bottomRight"
-                      title={<InfoTitle username={username} />} content={ <InfoActions /> } 
-                      trigger="click">
-              <Avatar className={ style['nav-avatar'] } icon="user" src={localStorage.getItem('cnodejs:avatar_url')}/>
-            </Popover>
-    </div>)
+    const { username, onLogout } = this.props
+    return (<div style={{ display: 'flex', alignItems: 'center', marginLeft: '20px' }}>
+              <div style={{ padding: '0 15px 0 15px' }}>
+                <Badge dot>
+                  <Icon type="notification" />
+                </Badge>
+              </div>
+              <Popover overlayStyle={{ zIndex: 100001 }}
+                        placement="bottomRight"
+                        title={<InfoTitle username={username} />} content={ <InfoActions onLogout={onLogout}/> } 
+                        trigger="click">
+                <Avatar className={ style['nav-avatar'] } icon="user" src={localStorage.getItem('cnodejs:avatar_url')}/>
+              </Popover>
+            </div>)
   }
 }
 
-class UnloggedInPanel extends Component {
-  render() {
-    return (
-      <NavLink href="/login" >登录</NavLink>
-    )
-  }
+function UnloggedInPanel (props) {
+  return (
+    <NavLink href="/login" >登录</NavLink>
+  )
 }
 
 export default withRouter(Navigator)
