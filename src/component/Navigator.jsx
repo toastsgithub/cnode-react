@@ -4,6 +4,7 @@ import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Popover, List } from '
 import style from './Navigator.styl'
 import NavLink from '../component/NavLink.jsx'
 import EventProxy from '../common/EventProxy.js'
+import IconButton from './IconButton.jsx'
 const { Header, Content, Footer } = Layout
 
 class Navigator extends Component {
@@ -106,7 +107,7 @@ class LoggedInPanel extends Component {
     return (<div style={{ display: 'flex', alignItems: 'center', marginLeft: '20px' }}>
               <div style={{ padding: '0 15px 0 15px' }}>
                 <Badge dot>
-                  <Icon type="notification" />
+                  <IconButton type="notification" />
                 </Badge>
               </div>
               <Popover overlayStyle={{ zIndex: 100001 }}

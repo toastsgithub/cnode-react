@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react'
-import { Card, Avatar, Icon } from 'antd'
+import { Card, Avatar, Icon, Tooltip } from 'antd'
 import style from './PostContentPage.styl'
 import Request from 'superagent'
 import Comment from '../component/Comment.jsx'
+import IconButton from '../component/IconButton.jsx'
 import marked from 'marked'
 marked.setOptions({
   gfm: true,
@@ -71,7 +72,7 @@ function LeftPart (props) {
     return <Comment comment={ cur } />
   })
   return (
-    <div style={{ flex: 1, minWidth: '0' }}>
+    <div style={{ flex: 1, minWidth: '0', marginTop: '10px' }}>
       <div className={ style['post-sheet'] }>
         <div className={ style['content-header'] }>
           <div className={ style['header-title'] }>
@@ -98,8 +99,7 @@ function LeftPart (props) {
             </div>
           </Card>
         </div>
-        <span style={{ fontSize: '20px' }}>评论</span>
-        <hr/>
+
         <CommentList comments={comments}>
           { (comments) => comments.map((commentItem)=> <Comment comment={commentItem}/> ) }
         </CommentList>
@@ -110,14 +110,19 @@ function RightPart (props) {
   const { title, author, replyCount } = props
   return (
   <div className={ style['post-info'] }>
-    <Card style={{position: 'sticky', top: '10px'}}>
+    <Card style={{position: 'sticky', top: '10px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)'}}>
       <h2 style={{ border: 'none' }}>{ title }</h2>
       <hr/>
-      <tr><td>作者：</td><td>{author.loginname}</td></tr>
-      <tr><td>回复数：</td><td>{replyCount}</td></tr>
+      <p style={{ display: 'flex', justifyContent: 'center' }}><Avatar src={ author.avatar_url } style={{ width: '50%', height: '50%' }}/></p>
+      {/* <table> */}
+        <tr><td><strong>作者：</strong></td><td>{author.loginname}</td></tr>
+        <tr><td><strong>回复数：</strong></td><td>{replyCount}</td></tr>
+      {/* </table> */}
       <hr/>
       <div style={{ display: 'flex' }} className={ style['post-menu'] }>
-        <Icon type="folder-add" />
+        <Tooltip title='添加到收藏'>
+          <IconButton type="folder-add" />
+        </Tooltip>
       </div>
       {/* <Avatar icon='user' style={{ width: '100%' }} src={author.avatar_url}/> */}
     </Card>
@@ -126,7 +131,10 @@ function RightPart (props) {
 
 function CommentList (props) {
   return (
-    <div>
+    <div style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
+      <div style={{ marginTop: '10px', border: '1px solid #e8e8e8', borderBottom: 'solid 1px #eee', background: '#fafafa', padding: '10px' }}>
+        <h2 style={{ border: 'none', marginBottom: '0' }}>评论</h2>
+      </div>
       { props.children(props.comments) }
     </div>)
 }

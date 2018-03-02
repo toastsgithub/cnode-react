@@ -12,12 +12,20 @@ roundCornerCard()
 :local(.layout)
   position: absolute
   padding: 10px
+  padding-top: 0
   top: 50px
   bottom: 0
   width: 100%
   overflow-y: auto
   flexAndCenter()
   align-items: baseline
+
+:local(.layout) a
+  word-wrap: break-word
+
+:local(.layout) code
+  word-wrap: break-word
+  white-space normal
 
 :local(.content-wrapper)
   width: 100%
@@ -30,6 +38,7 @@ roundCornerCard()
   border-radius: 0
 :local(.content-body) > .ant-card-body
   padding: 15px
+
 
 :local(.content-header)
   min-height: 87px
@@ -52,7 +61,15 @@ roundCornerCard()
   position: absolute
   background: #ccc
 
+:local(.post-sheet)
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1)
+
 :local(.post-info)
   width: 300px
   margin-left: 10px
-  // flex: 1
+
+
+
+@media (max-width: 900px)
+  :local(.post-info)
+    display: none

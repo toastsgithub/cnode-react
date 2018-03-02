@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import marked from 'marked'
-import { Card, Avatar, Icon } from 'antd'
+import { Card, Avatar, Icon, Tooltip, Button } from 'antd'
 import style from './Comment.styl'
 import moment from 'moment'
+import IconButton from './IconButton.jsx'
+
 moment.locale('zh-cn')
 marked.setOptions({
   gfm: true,
@@ -30,8 +32,12 @@ export default class Comment extends Component{
                   <span style={{ fontSize: '13px' }}>{ moment(cmt.create_at).fromNow() }</span>
                 </div>
                 <div className={ style['comment-menu-btn-group'] }>
-                  <Icon type="heart" />
-                  <Icon type="form" />
+                  <Tooltip title='赞👍' onClick={()=>{console.log('LIKE')}}>
+                    <IconButton type="heart" />
+                  </Tooltip>
+                  <Tooltip title='回复'>
+                    <IconButton type="form" />
+                  </Tooltip>
                 </div>
               </div>
               <div dangerouslySetInnerHTML={{ __html: marked(cmt.content) }}></div>
