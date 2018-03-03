@@ -20,7 +20,7 @@ export default class Comment extends Component{
     const cmt = this.props.comment
     return (
       
-        <Card className={ style['comment'] }>
+        <Card className={ style['comment'] } style={{ borderRight: 'none', borderLeft: 'none', borderTop: 'none' }}>
           <div className={ style['layout'] }>
             <Avatar shape="square" size="large" icon="user" src={ cmt.author.avatar_url } className={ style['comment-avatar'] }/>
             {/* <div className={ style['caret'] }/> */}
@@ -32,7 +32,7 @@ export default class Comment extends Component{
                   <span style={{ fontSize: '13px' }}>{ moment(cmt.create_at).fromNow() }</span>
                 </div>
                 <div className={ style['comment-menu-btn-group'] }>
-                  <Tooltip title='赞👍' onClick={()=>{console.log('LIKE')}}>
+                  <Tooltip title={<div>赞 <span style={{ color: 'red' }}>❤</span></div>} onClick={()=>{console.log('LIKE')}}>
                     <IconButton type="heart" />
                   </Tooltip>
                   <Tooltip title='回复'>

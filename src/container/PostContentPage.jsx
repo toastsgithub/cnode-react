@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Card, Avatar, Icon, Tooltip } from 'antd'
+import { Card, Avatar, Icon, Tooltip, message } from 'antd'
 import style from './PostContentPage.styl'
 import Request from 'superagent'
 import Comment from '../component/Comment.jsx'
@@ -14,28 +14,33 @@ export default class PostContentPage extends Component {
   constructor(props){
     super(props)
     this.state = {
+      id: null,
       postContent: '',
       comments: [],
       author: {},
       title: '',
+      isCollected: false,
       loadingContent: true,
       loadingComment: false
     }
+    this.collect = this.collect.bind(this)
   }
   componentDidMount(){
     this.setState({ loadingContent: true })
     const postId = this.props.match.params.postId
     Request.get(`/api/topic/${postId}`)
-    .query({ mdrender: false })
+    .query({ mdrender: false, accesstoken: localStorage.getItem('cnodejs:accesstoken') })
     .end((err, res)=>{
-      this.renderContent(res.body.data.content)
-      let author = res.body.data.author
-      author.id = res.body.data.author_id
+      const data = res.body.data
+      this.renderContent(data.content)
+      let author = data.author
+      author.id = data.author_id
       this.setState({ 
-        comments: res.body.data.replies,
+        id: data.id,
+        comments: data.replies,
         author: author,
-        title: res.body.data.title,
-        collected: res.body.data.collected
+        title: data.title,
+        isCollected: data.is_collect
       })
     })
   }
@@ -45,6 +50,20 @@ export default class PostContentPage extends Component {
       postContent:  contentHtmlDom,
       loadingContent: false
     })
+  }
+
+  collect () {
+    Request
+      .post(`/api/topic_collect/collect`)
+      .send({ accesstoken: localStorage.getItem('cnodejs:accesstoken'), topic_id: this.state.id })
+      .end((err, res)=>{
+        if (err) {
+          message.error('请求失败')
+          return
+        }
+        this.setState({ isCollected: true })
+        message.success('收藏成功')
+      })
   }
   render(){
     return (
@@ -57,9 +76,11 @@ export default class PostContentPage extends Component {
                     loadingContent={this.state.loadingContent}
                     loadingComment={this.state.loadingComment}/>
           <RightPart title={this.state.title}
+                     isCollected={this.state.isCollected}
                      author={this.state.author}
                      replyCount={this.state.comments.length}
-                     collected={this.state.collected} />
+                     collected={this.state.collected} 
+                     handleCollect={this.collect} />
         </div>
       </div>
     )
@@ -91,7 +112,7 @@ function LeftPart (props) {
               <Avatar src={ author.avatar_url } size='large'/>
             </div>
           </div>
-          <Card loading={ loadingContent } className={ style['content-body'] }>
+          <Card loading={ loadingContent } className={ style['content-body'] } bordered={false}>
             {/* FYI. 这里 Card 中如果没有内容的话, loading 效果不显示, 至少留个空白或者显式的留个 字符/回车 等 */}
                 
             <div>
@@ -107,10 +128,12 @@ function LeftPart (props) {
 }
 
 function RightPart (props) {
-  const { title, author, replyCount } = props
+  const { title, author, replyCount, isCollected, handleCollect } = props
+  const collectedColor = isCollected ? 'orange' : null
+  const collectedTooltip = isCollected ? '已收藏' : '添加到收藏'
   return (
   <div className={ style['post-info'] }>
-    <Card style={{position: 'sticky', top: '10px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)'}}>
+    <Card style={{position: 'sticky', top: '10px', boxShadow: '0 1px 4px rgba(0,0,0,0.1)'}} bordered={false}>
       <h2 style={{ border: 'none' }}>{ title }</h2>
       <hr/>
       <p style={{ display: 'flex', justifyContent: 'center' }}><Avatar src={ author.avatar_url } style={{ width: '50%', height: '50%' }}/></p>
@@ -120,8 +143,8 @@ function RightPart (props) {
       {/* </table> */}
       <hr/>
       <div style={{ display: 'flex' }} className={ style['post-menu'] }>
-        <Tooltip title='添加到收藏'>
-          <IconButton type="folder-add" />
+        <Tooltip title={collectedTooltip}>
+          <IconButton type="folder-add" color={collectedColor} onClick={handleCollect}/>
         </Tooltip>
       </div>
       {/* <Avatar icon='user' style={{ width: '100%' }} src={author.avatar_url}/> */}
@@ -130,11 +153,15 @@ function RightPart (props) {
 }
 
 function CommentList (props) {
+  const noCommentTips = <div> 还没有评论，来评一发 </div>
+  const checkIfHaveComment = props.comments.length !== 0 ? null : noCommentTips
+  
   return (
     <div style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.1)' }}>
-      <div style={{ marginTop: '10px', border: '1px solid #e8e8e8', borderBottom: 'solid 1px #eee', background: '#fafafa', padding: '10px' }}>
+      <div style={{ marginTop: '10px', borderBottom: 'solid 1px #eee', background: '#fafafa', padding: '10px' }}>
         <h2 style={{ border: 'none', marginBottom: '0' }}>评论</h2>
       </div>
+      { checkIfHaveComment }
       { props.children(props.comments) }
     </div>)
 }

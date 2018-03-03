@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Tooltip, List, Pagination } from 'antd'
+import { Link } from 'react-router-dom'
 import style from './Homepage.styl'
 import Request from 'superagent'
 import Skelecton from '../container/Skelecton.jsx'
 import Post from '../component/Post.jsx'
 import PostContentPage from '../container/PostContentPage.jsx'
+import IconButton from '../component/IconButton.jsx'
 import { html2text } from '../util.js'
 import EventProxy from '../common/EventProxy.js'
 
@@ -20,7 +22,8 @@ export default class Homepage extends Component{
       isLoading: false,
       currentTopic: '首页',
       currentPage: 1,
-      userInfo: { userName: 'Toast', githubName: 'toastsgithub', createDate: '2017-12-20 20:04:13', score: '3213'}
+      isLoggedin: false,
+      userInfo: { userName: '##', githubName: '##', createDate: '1970-01-01', score: '##'}
     }
     this.onPageChange = this.onPageChange.bind(this)
   }
@@ -42,21 +45,23 @@ export default class Homepage extends Component{
   }
   componentDidMount(){
     const tabName = this.props.match.params.type
+    this.setState({ isLoggedin: !!localStorage.getItem('cnodejs:accesstoken') })
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName, 1)
-    // // 记录滚动位置的历史数据，方便回跳的时候恢复现场
-    // const scrollBody = document.getElementById('scroll-body')
-    // // 函数节流 ??
-    // // TODOS 这里如果 react 复用 dom 的话，会造成重复添加监听事件
-    // let counter = 0
-    // scrollBody.addEventListener('scroll', ()=>{
-    //   counter ++
-    //   if (counter > 10){
-    //     sessionStorage.setItem(`@@scroll`,`${scrollBody.scrollTop}`)
-    //     counter = 0
-    //   }
-    // })
-    
+    const token = localStorage.getItem('cnodejs:accesstoken')
+    if (token){
+      Request
+        .get(`/api/user/${localStorage.getItem('cnodejs:loginname')}`)
+        .end((err, res)=>{
+          const { loginname, githubUsername, create_at, score } = res.body.data
+          this.setState({ userInfo: {
+            userName: loginname,
+            githubName: githubUsername,
+            score: score,
+            createDate: create_at.match(/\d{4}-\d{2}-\d{2}/)[0]
+          }})
+        })  
+    }
   }
   mapTopicName(tabName){
     return topicNameTable[checkTable.indexOf(tabName)]
@@ -121,7 +126,7 @@ export default class Homepage extends Component{
                    isTop={ cur.isTop }
                    postType={ this.mapTopicName(cur.tab) }/>
     })
-
+    const { isLoggedin, userInfo } = this.state
     return (
       <div className={ style['layout'] } id='scroll-body'>
         <Content className={ style['content'] }>
@@ -151,21 +156,46 @@ export default class Homepage extends Component{
                     </div>
                   </Tooltip>
                 </Card>
-                <Card className={ style['info-card'] }>
-                  <Icon type="appstore-o" />
-                  <span style={{ padding: '0 10px' }}>个人信息</span>
-                  <KeyValuePair icon={'smile-o'}>{ this.state.userInfo.userName}</KeyValuePair>
-                  <KeyValuePair icon={'github'}>{ this.state.userInfo.githubName}</KeyValuePair>
-                  <KeyValuePair icon={'rocket'}>{ this.state.userInfo.createDate}</KeyValuePair>
-                  <KeyValuePair icon={'pay-circle'}>{ this.state.userInfo.score}</KeyValuePair>
-                  {/* 发布新话题 */}
-                  <Button type='primary' className={ style['new-topic-btn'] } onClick={ this.jump.bind(this, '/post/new') }>发布新话题</Button>
-                </Card>
+                <UserInfoCard loggedIn={ isLoggedin }
+                              userName={ userInfo.userName }
+                              githubName={ userInfo.githubName }
+                              createDate={ userInfo.createDate }
+                              score={ userInfo.score }
+                              toNewPost={ this.jump.bind(this, '/post/new') }
+                              toLogin={ this.jump.bind(this, '/login') }/>
               </div>
             </div>
           </div>
         </Content>
       </div>
+    )
+  }
+}
+
+function UserInfoCard (props) {
+  // const token = localStorage.getItem('cnodejs:accesstoken')
+  const { loggedIn, userName, githubName, createDate, score, toNewPost, toLogin } = props
+  if (loggedIn){
+    return (
+      <Card className={ style['info-card'] }>
+        <Icon type="appstore-o" />
+        <span style={{ padding: '0 10px' }}>个人信息</span>
+        <KeyValuePair icon={'smile-o'}>{ userName }</KeyValuePair>
+        <KeyValuePair icon={'github'}>{ githubName }</KeyValuePair>
+        <KeyValuePair icon={'rocket'}>{ createDate }</KeyValuePair>
+        <KeyValuePair icon={'pay-circle'}>{ score }</KeyValuePair>
+        {/* 发布新话题 */}
+        <Button type='primary' className={ style['new-topic-btn'] } onClick={ toNewPost }>发布新话题</Button>
+      </Card>
+    )
+  } else {
+    return (
+      <Card className={ style['info-card'] }>
+        <p style={{ textAlign: 'center' }}>登录以解锁个人功能</p>
+        <p style={{ display: 'flex', justifyContent: 'center' }}>
+          <IconButton type="lock" size='40px' onClick={ toLogin }/>
+        </p>
+      </Card>
     )
   }
 }

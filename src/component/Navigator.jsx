@@ -36,7 +36,9 @@ class Navigator extends Component {
     this.props.history.push(path)
   }
   isSelectedTab(targetTabName){
+    
     const ret = targetTabName === this.state.currentTab ? 'nav-btn-selected' : ''
+    console.log(`${targetTabName} : ${this.state.currentTab}`)
     return ret
   }
   render(){
@@ -46,7 +48,7 @@ class Navigator extends Component {
         <img src="/cnodejs_dark.svg" height='30px'style={{ marginBottom: '10px', cursor: 'pointer' }} onClick={ this.jump.bind(this, '/') }/>
         <div className={ style['nav-right-box'] }>
           <NavLink href='/topics/all' className={ `${style['nav-btn']} ${this.isSelectedTab('all')}` }>首页</NavLink>
-          <NavLink href='/topics/good' className={ `${style['nav-btn']} ${this.isSelectedTab('good')}` }>精华</NavLink>
+          <NavLink href='/topics/good' className={ `hello world ${style['nav-btn']} ${this.isSelectedTab('good')}` }>精华</NavLink>
           <NavLink href='/topics/share' className={ `${style['nav-btn']} ${this.isSelectedTab('share')}` }>分享</NavLink>
           <NavLink href='/topics/ask' className={ `${style['nav-btn']} ${this.isSelectedTab('ask')}` }>问答</NavLink>
           <NavLink href='/topics/job' className={ `${style['nav-btn']} ${this.isSelectedTab('job')}` }>招聘</NavLink>

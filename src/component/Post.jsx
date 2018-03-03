@@ -61,7 +61,7 @@ class Post extends Component {
               </Tooltip>
             </div>
           </div>
-          <Link to={`/post/${this.props.id}`}>Read More</Link>
+          <Link to={`/post/${this.props.id}`}>阅读全文</Link>
         </span>
       </Card>)
   }

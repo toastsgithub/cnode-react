@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import style from './NavLink.styl'
 
 export default class NavLink extends Component{
 
   render(){
+    console.log(this.props.className)
     return (
-      <a href={ this.props.href } className={ style['link'] }>
-        { this.props.children }
-      </a>
+        <Link to={ this.props.href } className={ `${style['link']} ${this.props.className}` }>
+          { this.props.children }
+        </Link>
     )
   }
 }
