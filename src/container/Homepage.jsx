@@ -180,10 +180,18 @@ function UserInfoCard (props) {
       <Card className={ style['info-card'] }>
         <Icon type="appstore-o" />
         <span style={{ padding: '0 10px' }}>个人信息</span>
-        <KeyValuePair icon={'smile-o'}>{ userName }</KeyValuePair>
-        <KeyValuePair icon={'github'}>{ githubName }</KeyValuePair>
-        <KeyValuePair icon={'rocket'}>{ createDate }</KeyValuePair>
-        <KeyValuePair icon={'pay-circle'}>{ score }</KeyValuePair>
+        <Tooltip title='用户名' placement='left'>
+          <KeyValuePair icon={'smile-o'}>{ userName }</KeyValuePair>
+        </Tooltip>
+        <Tooltip title='github 账户' placement='left'>
+          <KeyValuePair icon={'github'}>{ githubName }</KeyValuePair>
+        </Tooltip>
+        <Tooltip title='加入时间' placement='left'>
+          <KeyValuePair icon={'rocket'}>{ createDate }</KeyValuePair>
+        </Tooltip>
+        <Tooltip title='积分' placement='left'>
+          <KeyValuePair icon={'pay-circle'}>{ score }</KeyValuePair>
+        </Tooltip>
         {/* 发布新话题 */}
         <Button type='primary' className={ style['new-topic-btn'] } onClick={ toNewPost }>发布新话题</Button>
       </Card>
@@ -206,9 +214,10 @@ class KeyValuePair extends Component {
   }
   render(){
     const iconName = this.props.icon
+    const { onMouseEnter, onMouseLeave } = this.props
     const MyIcon = iconName ? <Icon type={ iconName } style={{ marginRight: '10px' }}/> : null
     return(
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         { MyIcon }
         <span>{ this.props.children }</span>
       </div>
