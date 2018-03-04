@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Homepage from './Homepage.jsx'
+import { view as Homepage } from '@/container/Homepage'
 import NewPostPage from './NewPostPage.jsx'
-import Navigator from '../component/Navigator.jsx'
-import PostContentPage from '../container/PostContentPage.jsx'
-import LoginPage from '../container/LoginPage.jsx'
+import Navigator from '@/component/Navigator.jsx'
+import PostContentPage from '@/container/PostContentPage.jsx'
+import { view as LoginPage } from '@/container/Loginpage'
 
 export default class MainFrame extends Component {
   render (){

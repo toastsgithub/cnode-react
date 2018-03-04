@@ -5,7 +5,6 @@ import style from './NavLink.styl'
 export default class NavLink extends Component{
 
   render(){
-    console.log(this.props.className)
     return (
         <Link to={ this.props.href } className={ `${style['link']} ${this.props.className}` }>
           { this.props.children }

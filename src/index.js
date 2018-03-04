@@ -1,17 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+import store from '@/Store.js'
+import { Provider } from 'react-redux'
+import '@/index.css'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
-import Homepage from './container/Homepage.jsx'
-import MainFrame from './container/MainFrame.jsx'
-import registerServiceWorker from './registerServiceWorker'
+import Homepage from '@/container/Homepage/Homepage.jsx'
+import MainFrame from '@/container/MainFrame.jsx'
+import registerServiceWorker from '@/registerServiceWorker'
+
+
 ReactDOM.render((
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" render={() => <Redirect to="/topics/all" component={ Homepage } />} />
-      <Route path='/' component={ MainFrame } />
-    </Switch>
-  </BrowserRouter>
+  <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" render={() => <Redirect to="/topics/all" component={ Homepage } />} />
+        <Route path='/' component={ MainFrame } />
+      </Switch>
+    </BrowserRouter>
+  </Provider>
 ), document.getElementById('root'))
+
 registerServiceWorker()

@@ -1,0 +1,6 @@
+export const HANDLE_LOGIN = 'LOGIN/HANDLE_LOGIN'
+
+export const LOGIN_SUCCESS = 'LOGIN/LOGIN_SUCCESS'
+export const LOGIN_FAILED = 'LOGIN/LOGIN_FAILED'
+
+export const LOGOUT = 'LOGOUT'

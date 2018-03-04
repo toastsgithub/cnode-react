@@ -1,20 +1,23 @@
 import React, { Component } from 'react'
+import { login } from '../Loginpage/actions.js'
+import { LOCAL_STORAGE_ACCESSTOKEN } from '@/constant.js'
+import { connect } from 'react-redux'
 import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Tooltip, List, Pagination } from 'antd'
 import { Link } from 'react-router-dom'
 import style from './Homepage.styl'
 import Request from 'superagent'
-import Skelecton from '../container/Skelecton.jsx'
-import Post from '../component/Post.jsx'
-import PostContentPage from '../container/PostContentPage.jsx'
-import IconButton from '../component/IconButton.jsx'
-import { html2text } from '../util.js'
-import EventProxy from '../common/EventProxy.js'
+import Skelecton from '@/container/Skelecton.jsx'
+import Post from '@/component/Post.jsx'
+import PostContentPage from '@/container/PostContentPage.jsx'
+import IconButton from '@/component/IconButton.jsx'
+import { html2text } from '@/util.js'
+import EventProxy from '@/common/EventProxy.js'
 
 const { Header, Content, Footer } = Layout
 const checkTable =     ['ask', 'share', 'job', 'good', 'all', 'dev']
 const topicNameTable = ['问答', '分享', '招聘', '精华', '首页', '测试']
 
-export default class Homepage extends Component{
+class Homepage extends Component{
   constructor(props){
     super(props)
     this.state = {
@@ -27,40 +30,22 @@ export default class Homepage extends Component{
     }
     this.onPageChange = this.onPageChange.bind(this)
   }
+
   componentWillReceiveProps(nextProps){
     const tabName = nextProps.match.params.type
     EventProxy.trigger('navigator:switchTab', tabName)
-    // sessionStorage.removeItem('@@scroll')
     this.requestTopics(tabName)
   }
-  componentWillUpdate(){
-    // const scrollBody = document.getElementById('scroll-body')
-    // let scrollPosition = sessionStorage.getItem('@@scroll')
-    // if (scrollPosition){
-    //   // 异步保证内容加载完后才调整 scroll 历史
-    //   setImmediate(function() {
-    //     scrollBody.scrollTop = Number.parseInt(scrollPosition)
-    //   })
-    // }
-  }
+
   componentDidMount(){
     const tabName = this.props.match.params.type
     this.setState({ isLoggedin: !!localStorage.getItem('cnodejs:accesstoken') })
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName, 1)
-    const token = localStorage.getItem('cnodejs:accesstoken')
-    if (token){
-      Request
-        .get(`/api/user/${localStorage.getItem('cnodejs:loginname')}`)
-        .end((err, res)=>{
-          const { loginname, githubUsername, create_at, score } = res.body.data
-          this.setState({ userInfo: {
-            userName: loginname,
-            githubName: githubUsername,
-            score: score,
-            createDate: create_at.match(/\d{4}-\d{2}-\d{2}/)[0]
-          }})
-        })  
+    
+    const token = localStorage.getItem(LOCAL_STORAGE_ACCESSTOKEN)
+    if (token) {
+      this.props.automaticallyLogin(token)
     }
   }
   mapTopicName(tabName){
@@ -90,7 +75,7 @@ export default class Homepage extends Component{
           visitCount: cur.visit_count,
           createAt: cur.create_at,
           lastReplyAt: cur.last_reply_at,
-          isTop : cur.top,
+          isTop : cur.top, // 该帖子是否被置顶
           content: html2text(cur.content).substring(0, 200),
           tab: cur.tab
         })
@@ -126,7 +111,11 @@ export default class Homepage extends Component{
                    isTop={ cur.isTop }
                    postType={ this.mapTopicName(cur.tab) }/>
     })
-    const { isLoggedin, userInfo } = this.state
+    
+    const { user } = this.props
+    const { loggedIn, ...userInfo } = user
+    console.log(user)
+    console.log(userInfo)
     return (
       <div className={ style['layout'] } id='scroll-body'>
         <Content className={ style['content'] }>
@@ -156,10 +145,10 @@ export default class Homepage extends Component{
                     </div>
                   </Tooltip>
                 </Card>
-                <UserInfoCard loggedIn={ isLoggedin }
-                              userName={ userInfo.userName }
-                              githubName={ userInfo.githubName }
-                              createDate={ userInfo.createDate }
+                <UserInfoCard loggedIn={ loggedIn }
+                              userName={ userInfo.loginname }
+                              githubName={ userInfo.githubUsername }
+                              createDate={ userInfo.create_at }
                               score={ userInfo.score }
                               toNewPost={ this.jump.bind(this, '/post/new') }
                               toLogin={ this.jump.bind(this, '/login') }/>
@@ -187,7 +176,7 @@ function UserInfoCard (props) {
           <KeyValuePair icon={'github'}>{ githubName }</KeyValuePair>
         </Tooltip>
         <Tooltip title='加入时间' placement='left'>
-          <KeyValuePair icon={'rocket'}>{ createDate }</KeyValuePair>
+          <KeyValuePair icon={'rocket'}>{ createDate.match(/^\d{4}-\d{2}-\d{2}/)[0] }</KeyValuePair>
         </Tooltip>
         <Tooltip title='积分' placement='left'>
           <KeyValuePair icon={'pay-circle'}>{ score }</KeyValuePair>
@@ -225,3 +214,18 @@ class KeyValuePair extends Component {
   }
 }
 
+function mapStateToProps (state, ownProps) {
+  return {
+    user: state.user
+  }
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    automaticallyLogin: (accesstoken) => {
+      dispatch(login(accesstoken))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (Homepage)
