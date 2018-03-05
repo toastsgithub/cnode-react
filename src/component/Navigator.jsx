@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom'
 import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Popover, List } from 'antd'
 import style from './Navigator.styl'
 import NavLink from '../component/NavLink.jsx'
+import DropdownButton from '../component/DropdownButton.jsx'
 import EventProxy from '../common/EventProxy.js'
 import IconButton from './IconButton.jsx'
 const { Header, Content, Footer } = Layout
@@ -23,12 +24,6 @@ class Navigator extends Component {
     EventProxy.on('navigator:switchTab', (tabName)=>{
       this.setState({ currentTab: tabName })
     })
-    // const token = localStorage.getItem('cnodejs:accesstoken')
-    // if (token){
-    //   this.setState({
-    //     username: "toast"
-    //   })
-    // }
   }
 
   logout () {
@@ -55,7 +50,7 @@ class Navigator extends Component {
           <NavLink href='/topics/ask' className={ `${style['nav-btn']} ${this.isSelectedTab('ask')}` }>问答</NavLink>
           <NavLink href='/topics/job' className={ `${style['nav-btn']} ${this.isSelectedTab('job')}` }>招聘</NavLink>
           <NavLink href='/topics/dev' className={ `${style['nav-btn']} ${this.isSelectedTab('dev')}` }>测试</NavLink>
-          <UserInfoPanel username={ loginname } avatar_url={ avatar_url } onLogout={this.logout}/>
+          <UserInfoPanel username={ loginname } avatar_url={ avatar_url } onLogout={this.logout} goProfile={ this.jump.bind(this, '/profile') }/>
         </div>
       </div>
     </Header>
@@ -81,39 +76,33 @@ class InfoActions extends Component {
     return (
       <div>
         <DropdownButton>设置</DropdownButton>
+        <DropdownButton useLink={true} to='/profile' onClick={ this.props.goProfile }>个人中心</DropdownButton>
         <DropdownButton onClick={ this.props.onLogout }>退出登录</DropdownButton>
       </div>
     )
   }
 }
 
-class DropdownButton extends Component {
-  render(){
-    return (
-      <Button style={{ width: '100%', border: 'none', textAlign: 'left'}} onClick={this.props.onClick}>{ this.props.children }</Button>
-    )
-  }
-}
 
 function UserInfoPanel (props) {
-  const { username, onLogout, avatar_url } = props
+  const { username, onLogout, avatar_url, goProfile } = props
   return username ? 
-        <LoggedInPanel username={username} onLogout={onLogout} avatar_url={avatar_url}/> :
+        <LoggedInPanel username={username} onLogout={onLogout} avatar_url={avatar_url} goProfile={ props.goProfile }/> :
         <UnloggedInPanel />
 }
 
 class LoggedInPanel extends Component {
   render (){
-    const { username, onLogout, avatar_url } = this.props
+    const { username, onLogout, avatar_url, goProfile } = this.props
     return (<div style={{ display: 'flex', alignItems: 'center', marginLeft: '20px' }}>
               <div style={{ padding: '0 15px 0 15px' }}>
-                <Badge count={23}>
+                <Badge dot>
                   <IconButton type="notification" />
                 </Badge>
               </div>
               <Popover overlayStyle={{ zIndex: 100001 }}
                         placement="bottomRight"
-                        title={<InfoTitle username={username} />} content={ <InfoActions onLogout={onLogout}/> } 
+                        title={<InfoTitle username={username} />} content={ <InfoActions className={ style['nav-dropdown'] } onLogout={onLogout} goProfile={ goProfile }/> } 
                         trigger="click">
                 <Avatar className={ style['nav-avatar'] } icon="user" src={ avatar_url }/>
               </Popover>

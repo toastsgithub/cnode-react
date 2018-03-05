@@ -30,7 +30,7 @@ export default class MarkdownEditor extends Component{
   render(){
     const previewStyle = { display: (this.state.showPreview ? 'block' : 'none') }
     return(
-      <div>
+
         <div className={ style['editor-wrapper'] }>
           <div className={ style['editor-text'] }>
             <ButtonGroup className={ style["directive-bar"] }>
@@ -49,9 +49,9 @@ export default class MarkdownEditor extends Component{
               textAreaProps={{ id: 'md-editor', className: style['editor-textarea'] }}
               value={ this.props.value }
               onChange={ this.props.onChange } style={{ outline: 'none' }}/>
-            <div style={{ marginTop: '10px' }}>
+            {/* <div style={{ marginTop: '10px' }}>
               <Button type='default'>发布</Button>
-            </div>
+            </div> */}
           </div>
         
           <div className={ style['editor-preview'] } style={ previewStyle }>
@@ -61,7 +61,7 @@ export default class MarkdownEditor extends Component{
               showdownOptions={{tables: true}}/>
           </div>
         </div>
-      </div>
+
     )
   }
 }

@@ -5,7 +5,7 @@ import combine from 'classnames'
 
 export default class IconButton extends Component{
   render () {
-    const { type, circled, size, color, onClick, onMouseEnter, onMouseLeave } = this.props
+    const { type, circled, size, color, onClick, onMouseEnter, onMouseLeave, text } = this.props
     
     const classNames = {}
     const button_cls = style['button']
@@ -16,6 +16,7 @@ export default class IconButton extends Component{
     const extraStyle = {}
     size && (extraStyle['fontSize'] = size)
     color && (extraStyle['color'] = color)
+    const textElem = text ? <span style={{ marginLeft: '5px' }}>{ text }</span> : null
     return (
       <button className={ combine(classNames) }
               onClick={ onClick } 
@@ -23,6 +24,7 @@ export default class IconButton extends Component{
               onMouseLeave={ onMouseLeave }
               style={ extraStyle } >
         <Icon type={ type } />
+        { textElem }
       </button>
     )
   }

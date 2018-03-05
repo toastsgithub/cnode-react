@@ -40,6 +40,8 @@ class LoginPage extends Component {
                  onPressEnter={this.onLogin}
                  placeholder="Access Token"/>
           <Button style={{ width: '100%', marginTop: '10px' }} onClick={this.props.onLogin.bind(this, this.state.accessToken)} >Login</Button>
+          <div style={{ opacity: 0.4, fontSize: '12px', marginTop: '10px' }}>还没有 cnodejs 社区的账户？</div>
+          <div style={{ opacity: 0.4, fontSize: '12px' }}>点击跳转到主站注册：<a href="http://cnodejs.org">CNodejs</a></div>
         </Card>
       </div>
     )

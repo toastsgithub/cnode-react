@@ -63,6 +63,7 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jest": "^22.3.0",
+    "remote-redux-devtools": "^0.5.12",
     "webpack-dev-server": "^2.9.5"
   },
   "jest": {

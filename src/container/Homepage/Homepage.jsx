@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { login } from '../Loginpage/actions.js'
-import { LOCAL_STORAGE_ACCESSTOKEN } from '@/constant.js'
 import { connect } from 'react-redux'
 import { Layout, Menu, Icon, Button, Avatar, Badge, Card, Tooltip, List, Pagination } from 'antd'
 import { Link } from 'react-router-dom'
@@ -8,7 +6,7 @@ import style from './Homepage.styl'
 import Request from 'superagent'
 import Skelecton from '@/container/Skelecton.jsx'
 import Post from '@/component/Post.jsx'
-import PostContentPage from '@/container/PostContentPage.jsx'
+import { view as PostContentPage } from '@/container/PostContentPage'
 import IconButton from '@/component/IconButton.jsx'
 import { html2text } from '@/util.js'
 import EventProxy from '@/common/EventProxy.js'
@@ -38,15 +36,11 @@ class Homepage extends Component{
   }
 
   componentDidMount(){
+    document.title = 'CNode - Node.js 专业中文社区 | React 实现'
     const tabName = this.props.match.params.type
     this.setState({ isLoggedin: !!localStorage.getItem('cnodejs:accesstoken') })
     EventProxy.trigger('navigator:switchTab', tabName)
     this.requestTopics(tabName, 1)
-    
-    const token = localStorage.getItem(LOCAL_STORAGE_ACCESSTOKEN)
-    if (token) {
-      this.props.automaticallyLogin(token)
-    }
   }
   mapTopicName(tabName){
     return topicNameTable[checkTable.indexOf(tabName)]
@@ -114,8 +108,6 @@ class Homepage extends Component{
     
     const { user } = this.props
     const { loggedIn, ...userInfo } = user
-    console.log(user)
-    console.log(userInfo)
     return (
       <div className={ style['layout'] } id='scroll-body'>
         <Content className={ style['content'] }>
@@ -222,9 +214,9 @@ function mapStateToProps (state, ownProps) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    automaticallyLogin: (accesstoken) => {
-      dispatch(login(accesstoken))
-    }
+    // automaticallyLogin: (accesstoken) => {
+    //   dispatch(login(accesstoken))
+    // }
   }
 }
 
